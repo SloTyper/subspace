@@ -9,40 +9,6 @@ app.get("/", (req, res) => {
   res.send("<h1>Harish Selvaraj</h1>");
 });
 
-async function getBlogs() {
-  try {
-    const headers = {
-      "x-hasura-admin-secret":
-        "32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6",
-    };
-    const response = await axios.get(
-      "https://intent-kit-16.hasura.app/api/rest/blogs",
-      { headers }
-    );
-    if (!response) {
-      res.status(500).send(error + ": Error occured during API fetch");
-    }
-    const allBlogs = response.data.blogs;
-    const totalBlogs = _.size(allBlogs);
-    const longestBlog = _.maxBy(response.data.blogs, "title.length").title;
-    const blogsWithPrivacyTitle = _.filter(response.data.blogs, (blog) =>
-      _.includes(blog.title.toLowerCase(), "privacy")
-    ).length;
-    const uniqueTitles = _.uniqBy(response.data.blogs, "title").map(
-      (blog) => blog.title
-    );
-    const answer = {
-      NumberOfBlogs: totalBlogs,
-      LongestBlogTitle: longestBlog,
-      BlogsWithPrivacy: blogsWithPrivacyTitle,
-      UniqueTitles: uniqueTitles,
-    };
-    return answer;
-  } catch (error) {
-    res.status(500).send(error + ": Sorry, unexpected error!");
-  }
-}
-
 app.get("/api/blog-stats", (req, res) => {
   async function getBlogs() {
     try {
